@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"runtime/debug"
 	"time"
+
+	"github.com/alapanbagchi/jobdna/internal/handler"
+	"github.com/gorilla/sessions"
 )
 
 // Middleware defines a function that processes an HTTP request
@@ -72,6 +75,24 @@ func Recovery(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func IsAuthenticated(store *sessions.CookieStore, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		session, _ := store.Get(r, "jobdna-session")
+		userID := session.Values["user_id"]
+
+		if userID == nil {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
+type MiddlewareHandler struct {
+	handler.Handler
 }
 
 // custom responseWriter to capture status code

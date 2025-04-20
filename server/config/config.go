@@ -4,17 +4,29 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	Environment string
-	Server      ServerConfig
-	Database    DatabaseConfig
-	JWT         JWTConfig
+	Environment   string
+	Server        ServerConfig
+	Database      DatabaseConfig
+	JWT           JWTConfig
+	SessionSecret string
+	Redis         RediStore
+	Domain        string
 }
 
 type ServerConfig struct {
 	Port int
+}
+
+type RediStore struct {
+	Host     string
+	Port     int
+	Password string
+	DB       int
 }
 
 type DatabaseConfig struct {
@@ -48,6 +60,12 @@ func getEnvAsInt(key string, fallback int) int {
 }
 
 func Load() (*Config, error) {
+	// Load .env file
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("No .env file found, proceeding with environment variables only.")
+	}
+
 	cfg := &Config{
 		Environment: getEnv("APP_ENV", "development"),
 		Server: ServerConfig{
@@ -63,12 +81,24 @@ func Load() (*Config, error) {
 		},
 		JWT: JWTConfig{
 			Secret: getEnv("JWT_SECRET", "default-secret-key"),
-			Expiry: getEnvAsInt("JWT_EXPIRY", 24), // in hours
+			Expiry: getEnvAsInt("JWT_EXPIRY", 24),
 		},
+		SessionSecret: getEnv("SESSION_SECRET", "default-secret-key"),
+		Redis: RediStore{
+			Host:     getEnv("REDIS_HOST", "localhost"),
+			Port:     getEnvAsInt("REDIS_PORT", 6379),
+			Password: getEnv("REDIS_PASSWORD", ""),
+			DB:       getEnvAsInt("REDIS_DB", 0),
+		},
+		Domain: getEnv("DOMAIN", "localhost"),
 	}
 
 	if cfg.JWT.Secret == "default-secret-key" && cfg.Environment == "production" {
 		return nil, fmt.Errorf("JWT_SECRET must be set in production")
+	}
+
+	if cfg.SessionSecret == "default-secret-key" && cfg.Environment == "production" {
+		return nil, fmt.Errorf("SESSION_SECRET must be set in production")
 	}
 
 	return cfg, nil
@@ -77,4 +107,8 @@ func Load() (*Config, error) {
 func (d *DatabaseConfig) ConnectionString() string {
 	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
 		d.Host, d.Port, d.User, d.Password, d.Name, d.SSLMode)
+}
+
+func (d *RediStore) ConnectionString() string {
+	return fmt.Sprintf("rediss://default:%s@%s:%d", d.Password, d.Host, d.Port)
 }
