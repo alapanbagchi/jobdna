@@ -104,5 +104,4 @@ func registerRoutes(mux *http.ServeMux, h *handler.Handler, middleware func(http
 	base := "/api/v1"
 	mux.Handle(base+"/register", middleware(http.HandlerFunc(h.RegisterUser)))
 	mux.Handle(base+"/login", middleware(http.HandlerFunc(h.LoginUser)))
-	mux.Handle(base+"/logout", middleware(http.HandlerFunc(h.Logout)))
 }
