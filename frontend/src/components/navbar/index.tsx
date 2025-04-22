@@ -6,7 +6,6 @@ export function Navbar({ style }: { style?: "auth" | "default" }) {
   return style === "auth" ? (
     <nav className="flex w-full justify-between">
       <Logo />
-      <AuthButton />
     </nav>
   ) : (
     <nav className="w-full flex items-center justify-between max-w-[80%] mt-4 mx-auto rounded-xl px-2 py-2 bg-accent">
