@@ -7,10 +7,10 @@ import { Control, FieldValues, FieldErrors } from "react-hook-form";
 
 interface InputsWithLabelProps {
   label: string;
-  children: ReactNode;
+  children?: ReactNode;
   error?: string;
-  control: Control<any>;
-  errors: FieldErrors<FieldValues>;
+  control?: Control<any>;
+  errors?: FieldErrors<FieldValues>;
 }
 
 export default function InputsWithLabel({
@@ -68,7 +68,7 @@ export default function InputsWithLabel({
     .map((child) => (child.props as any).name)
     .filter(Boolean);
 
-  const hasError = !!error || fieldNames.some((name) => errors[name]);
+  const hasError = !!error || fieldNames.some((name) => errors?.[name]);
   return (
     <div className="mx-auto space-y-4">
       <div
@@ -97,7 +97,7 @@ export default function InputsWithLabel({
           const name = isValidElement(child)
             ? (child.props as any).name
             : undefined;
-          const childHasError = name && errors[name];
+          const childHasError = name && errors?.[name];
           return (
             <div
               key={index}
@@ -114,7 +114,7 @@ export default function InputsWithLabel({
               {child}
               {childHasError && (
                 <p className="text-destructive text-sm mt-1 px-4 py-2 bg-destructive/20 border-t-2 border-dashed border-destructive">
-                  {errors[name]?.message as string}
+                  {errors?.[name]?.message as string}
                 </p>
               )}
             </div>
