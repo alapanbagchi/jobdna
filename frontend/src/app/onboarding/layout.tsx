@@ -8,8 +8,8 @@ const OnboardingLayout = ({ children }: { children: React.ReactNode }) => {
         <Navbar style={"auth"} />
       </div>
       <div className="w-full">
-        <div className="rounded-xl min-w-[600px] max-w-[650px] fixed top-0 h-[calc(100vh-50px)] bg-accent flex flex-col justify-center px-10 py-16 m-6 w-fit max-[1220px]:hidden">
-          <div className="h-full flex flex-col justify-between">
+        <div className="rounded-xl min-w-[600px] max-w-[650px] fixed top-0 h-screen bg-accent flex flex-col justify-center px-10 py-16 w-fit max-[1220px]:hidden">
+          <div className="h-full flex flex-col justify-between px-5 pt-2">
             <ProgressBar />
           </div>
         </div>

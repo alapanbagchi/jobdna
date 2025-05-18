@@ -5,12 +5,12 @@ import {
   Select,
   SelectTrigger,
   SelectItem,
-} from "../ui/select";
+} from "./select";
 
-export const MonthSelect = ({
+export const YearSelect = ({
   value,
   onChange,
-  placeholder = "Month",
+  placeholder = "Year",
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -20,10 +20,13 @@ export const MonthSelect = ({
     <SelectTrigger className="border-0 outline-none ring-0 focus:ring-0 [&_svg:not([class*='text-'])]:hidden">
       <SelectValue placeholder={placeholder} />
     </SelectTrigger>
-    <SelectContent>
-      {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-        <SelectItem key={month} value={month.toString()}>
-          {format(new Date(2022, month - 1), "MMMM")}
+    <SelectContent className="max-h-[300px] overflow-auto">
+      {Array.from(
+        { length: new Date().getFullYear() - 1950 + 1 },
+        (_, i) => 1950 + i
+      ).map((year) => (
+        <SelectItem key={year} value={year.toString()}>
+          {year}
         </SelectItem>
       ))}
     </SelectContent>

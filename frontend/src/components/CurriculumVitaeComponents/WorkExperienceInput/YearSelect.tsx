@@ -1,22 +1,24 @@
-import { format } from "date-fns";
-import {
-  SelectContent,
-  SelectValue,
-  Select,
-  SelectTrigger,
-  SelectItem,
-} from "../ui/select";
+"use client";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+interface YearSelectProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+}
 export const YearSelect = ({
   value,
   onChange,
   placeholder = "Year",
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-}) => (
-  <Select defaultValue={value} onValueChange={onChange}>
+}: YearSelectProps) => (
+  <Select value={value} onValueChange={onChange}>
     <SelectTrigger className="border-0 outline-none ring-0 focus:ring-0 [&_svg:not([class*='text-'])]:hidden">
       <SelectValue placeholder={placeholder} />
     </SelectTrigger>

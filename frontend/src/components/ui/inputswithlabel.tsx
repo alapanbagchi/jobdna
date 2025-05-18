@@ -112,9 +112,9 @@ export default function InputsWithLabel({
               )}
             >
               {child}
-              {childHasError && (
-                <p className="text-destructive text-sm mt-1 px-4 py-2 bg-destructive/20 border-t-2 border-dashed border-destructive">
-                  {errors?.[name]?.message as string}
+              {error && (
+                <p className="text-sm mt-1 m-0.5 rounded-md text-[#fff6f6] px-4 py-2 bg-destructive  border-t-2 border-dashed border-destructive">
+                  {error}
                 </p>
               )}
             </div>
